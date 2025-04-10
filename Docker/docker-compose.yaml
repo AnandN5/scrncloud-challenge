@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: local-postgres
+
+    # Below are the environment variables for the database
+    # The creds are in plaintext and commited to the repo
+    # for local setup only
+    # In production, use secrets such as AWS Secrets Manager
+    # or environment variables to set these values
+    environment:
+      POSTGRES_USER: screencloud
+      POSTGRES_PASSWORD: screencloud
+      POSTGRES_DB: screencloud
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
