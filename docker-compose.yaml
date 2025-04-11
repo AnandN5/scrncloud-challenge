@@ -1,23 +1,33 @@
 version: '3.8'
 
+x-postgres-env: &postgres-env
+  POSTGRES_USER: candidate
+  POSTGRES_PASSWORD: screencloudpwd
+  POSTGRES_DB: screencloud-combined-db
+
+x-postgres-volumes: &postgres-volumes
+  - postgres_data:/var/lib/postgresql/data
+
+x-order-service-port: &device-service-port
+  - "3000:3000"
+
 services:
+  device-service:
+    image: device-management-service
+    container_name: device-management-service
+    build:
+      context: ./DeviceService
+      dockerfile: ./Dockerfile
+    ports: *device-service-port
+    depends_on:
+      - postgres
   postgres:
     image: postgres:15
     container_name: local-postgres
-
-    # Below are the environment variables for the database
-    # The creds are in plaintext and commited to the repo
-    # for local setup only
-    # In production, use secrets such as AWS Secrets Manager
-    # or environment variables to set these values
-    environment:
-      POSTGRES_USER: screencloud
-      POSTGRES_PASSWORD: screencloud
-      POSTGRES_DB: screencloud
+    environment: *postgres-env
+    volumes: *postgres-volumes
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
 volumes:
