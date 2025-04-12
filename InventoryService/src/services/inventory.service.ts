@@ -12,7 +12,6 @@ const addInventory = async (inventory: Inventory): Promise<Inventory> => {
 
         const inventoriesRepository = getRepository(dbConnection);
 
-
         const newInventory = await inventoriesRepository.addInventory(inventory);
         return newInventory;
     }

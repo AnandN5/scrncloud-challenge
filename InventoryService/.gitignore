@@ -23,3 +23,5 @@ logs/
 
 # IDEs and editors
 .vscode/
+
+.DS_Store
