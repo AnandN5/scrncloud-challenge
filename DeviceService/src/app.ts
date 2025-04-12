@@ -1,18 +1,19 @@
-import http from 'http';
-import express from 'express';
-import bodyParser from 'body-parser';
-import { Request, Response } from 'express';
+import app from './config/appConfig';
+import http, { get } from 'http';
 import { port } from './config/config';
-// const port = 3000;
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.get('/', async (req: Request, res: Response) => {
-  res.status(200).json({
-    message: 'Hello World'
+import dbConnection from "./config/postgresdb";
+import logger from './utils/logger';
+
+
+console.log('Starting Device Service...');
+const db = dbConnection;
+db.connect().then(() => {
+  logger.info('Database connected');
+  const server = http.createServer(app);
+  server.listen(port, () => {
+    logger.info(`API started at http://localhost:${port}`);
   });
-});
-const server = http.createServer(app);
-server.listen(port, () => {
-  console.log(`API started at http://localhost:${port}`);
+}).catch((error) => {
+  console.log('Database connection error:', error);
+  logger.error('Database connection error:', error);
 });
