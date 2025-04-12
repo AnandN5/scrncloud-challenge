@@ -16,7 +16,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment files
-# .env
+.env
 .env.*.local
 
+logs/
+
 # IDEs and editors
+.vscode/
+
+.DS_Store
