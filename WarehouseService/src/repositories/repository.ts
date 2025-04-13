@@ -1,15 +1,15 @@
 import { db_type } from "../config/config";
 import { Repository } from "../interfaces/repository.interface";
-import { DiscountRepositoryPostgres } from "./discount.repository.postgres";
+import { WarehouseRepositoryPostgres } from "./warehouse.repository.postgres";
 
-let discountRepository: Repository
+let warehouseRepository: Repository
 
 const getRepository = (db: any): Repository => {
     if (db_type === "postgres") {
-        discountRepository = new DiscountRepositoryPostgres(db);
+        warehouseRepository = new WarehouseRepositoryPostgres(db);
     }
     // Add other database types here if needed
-    return discountRepository;
+    return warehouseRepository;
 }
 
 export default getRepository;

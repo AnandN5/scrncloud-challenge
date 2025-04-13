@@ -9,7 +9,7 @@ const addDiscount = async (req: Request, res: Response, next: NextFunction) => {
             throw new Error("Discount data is required");
         }
         const newDiscount = await discountServices.addDiscount(discount);
-        return handleResponse(res, 201, "Discount added successfully", newDiscount);
+        return handleResponse(res, 201, newDiscount);
     } catch (error) {
         next(error);
     }
@@ -19,7 +19,7 @@ const getDiscounts = async (req: Request, res: Response, next: NextFunction) => 
     try {
         const options = req.query as any;
         const discounts = await discountServices.getDiscounts(options);
-        return handleResponse(res, 200, "Discounts fetched successfully", discounts);
+        return handleResponse(res, 200, discounts);
     } catch (error) {
         next(error);
     }
@@ -36,7 +36,7 @@ const getDeviceDiscount = async (req: Request, res: Response, next: NextFunction
         if (!discount) {
             return handleResponse(res, 404, "Discount not found");
         }
-        return handleResponse(res, 200, "Discount fetched successfully", discount);
+        return handleResponse(res, 200, discount);
     } catch (error) {
         next(error);
     }

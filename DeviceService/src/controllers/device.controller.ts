@@ -13,7 +13,7 @@ const createDevice = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const deviceData = req.body;
     const newDevice = await deviceService.addDevice(deviceData);
-    handleResponse(res, 201, "Device created successfully", newDevice);
+    handleResponse(res, 201, newDevice);
     logger.info("Device created successfully", newDevice);
   } catch (error) {
     console.error('Error creating device:', error);
@@ -25,7 +25,7 @@ const createDevice = async (req: Request, res: Response, next: NextFunction) => 
 const getDevices = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const devices = await deviceService.getDevices(req.query);
-    handleResponse(res, 200, "Devices fetched successfully", devices);
+    handleResponse(res, 200, devices);
     logger.info("Devices fetched successfully", devices);
   } catch (error) {
     console.error('Error fetching devices:', error);
