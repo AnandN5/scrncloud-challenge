@@ -13,11 +13,21 @@ export class InventoryRepositoryPostgres implements Repository {
         const params: any[] = [];
         let optionsCount = 1;
 
+        const device_ids = options?.device_ids;
+
         for (const key in options) {
             logger.info("Adding inventory getOption Key: \n", key);
             query += params.length ? " AND" : " WHERE";
-            query += ` ${key} = $${optionsCount}`;
-            params.push(options[key as keyof InventoryFilters]);
+            if (device_ids && device_ids.length > 0) {
+                query += " device_id = ANY($1)";
+                params.push(device_ids);
+            } else {
+                query += ` ${key} = $${optionsCount}`;
+                params.push(options[key as keyof InventoryFilters]);
+            }
+            if(key === "filter_stockless" && options[key as keyof InventoryFilters] === true) {
+                query += " AND stock > 0";
+            }
             optionsCount++;
         }
         try {
@@ -25,8 +35,7 @@ export class InventoryRepositoryPostgres implements Repository {
             return result.rows;
         }
         catch (error) {
-            logger.error("Error fetching devices from PostgreSQL", error);
-            throw error;
+            throw new Error(`Error fetching inventory from db: ${error}`);
         }
     }
 
@@ -54,8 +63,7 @@ export class InventoryRepositoryPostgres implements Repository {
             return newInventory;
         }
         catch (error) {
-            logger.error("Error adding inventory: ", error);
-            throw error;
+            throw new Error(`Error adding inventory to db: ${error}`);
         }
     }
 

@@ -6,7 +6,6 @@ export interface Warehouse extends BaseAttributes {
   longitude: number;
 }
 
-export interface PotentialWarehouseResponse {
-  warehouse: Warehouse;
-  distance: number;
+export interface WarehouseFilters {
+  ids?: string[];
 }

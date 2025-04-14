@@ -1,7 +1,8 @@
-import { Inventory, InventoryFilters, InventoryUpdateFilters } from "../interfaces/inventory.interface";
+import { GetStockFilters, GetStockResponse, Inventory, InventoryFilters, InventoryUpdateFilters } from "../interfaces/inventory.interface";
 import dbConnection from "../config/postgresdb";
 import logger from "../utils/logger";
 import getRepository from "../repositories/repository";
+import warehouseService from "./warehouse.service";
 
 const addInventory = async (inventory: Inventory): Promise<Inventory> => {
     try {
@@ -58,8 +59,50 @@ const updateInventory = async (id: string, inventoryUpdate: InventoryUpdateFilte
     }
 }
 
+const getStock = async (filters: GetStockFilters): Promise<GetStockResponse[]> => {
+    const inventoryRepository = getRepository(dbConnection);
+    try {
+        const stocks = await inventoryRepository.getInventory(filters);
+
+        if (!stocks || stocks.length === 0) {
+            logger.info("No stock found for the given filters", filters);
+            return []
+        }
+
+        const warehouseIdsWithStock = stocks.map((item) => item.warehouse_id);
+        const uniqueWarehouseIds = [...new Set(warehouseIdsWithStock)];
+        logger.info("Unique warehouse IDs with stock", uniqueWarehouseIds);
+
+        const warehouses = await warehouseService.getWarehouses({ warehouse_ids: uniqueWarehouseIds });
+        if (!warehouses || warehouses.length === 0) {
+            logger.info("Inventory Services: No warehouses found for the given stock");
+            return []
+        }
+
+
+        const stockResponse: GetStockResponse[] = [];
+        for (let i = 0; i < stocks.length; i++) {
+            const stockItem = stocks[i];
+            const warehouse = warehouses.find((wh) => wh.id === stockItem.warehouse_id);
+            if (warehouse) {
+                const stockData: GetStockResponse = {
+                    device_id: stockItem.device_id,
+                    warehouse,
+                    stock: stockItem.stock,
+                };
+                stockResponse.push(stockData);
+            }
+        }
+        return stockResponse;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 export default {
     addInventory,
     getInventories,
-    updateInventory
+    updateInventory,
+    getStock,
 }

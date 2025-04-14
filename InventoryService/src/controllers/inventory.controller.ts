@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import inventoryService from "../services/inventory.service";
 import { handleResponse } from "../middlewares/reponse.handler";
+import { GetStockFilters } from "../interfaces/inventory.interface";
 
 const addInventory = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -33,8 +34,34 @@ const updateInventory = async (req: Request, res: Response, next: NextFunction) 
     }
 };
 
+const getStock = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let device_ids: string[]
+        if (req.query.device_ids) {
+            const deviceIdsParam = req.query.device_ids as string;
+
+            // Handle comma-separated UUIDs
+            device_ids = deviceIdsParam.split(",");
+
+            // Validate UUIDs (basic validation for UUID format)
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            device_ids = device_ids.filter((id) => uuidRegex.test(id));
+
+            if (device_ids.length > 0) {
+                const stock = await inventoryService.getStock({device_ids} as GetStockFilters);
+                handleResponse(res, 200, stock);
+            }
+        } else {
+            return handleResponse(res, 400, { message: "device_ids query parameter is required" });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 export default {
     addInventory,
     getInventories,
     updateInventory,
+    getStock,
 };

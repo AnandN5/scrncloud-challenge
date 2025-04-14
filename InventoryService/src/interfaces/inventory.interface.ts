@@ -1,4 +1,5 @@
 import { BaseAttributes } from "./base.interface";
+import { Warehouse } from "./warehouse.interface";
 
 export interface Inventory extends BaseAttributes {
   device_id: string;
@@ -6,11 +7,28 @@ export interface Inventory extends BaseAttributes {
   stock: number;
 }
 
-export interface InventoryFilters {
+export interface InventoryFilters extends GetStockFilters {
   device_id?: string;
   warehouse_id?: string;
   id?: string;
   stock?: number;
+}
+
+export interface GetStockFilters {
+  device_ids?: string[];
+  warehouse_ids?: string[];
+  filter_stockless?: boolean;
+}
+
+
+export interface GetStockResponse {
+  device_id: string;
+  warehouse: Warehouse
+  stock: number;
+}
+export interface InventoryStockFilters {
+  device_ids?: string[];
+  warehouse_id?: string[];
 }
 
 export interface InventoryUpdateFilters {

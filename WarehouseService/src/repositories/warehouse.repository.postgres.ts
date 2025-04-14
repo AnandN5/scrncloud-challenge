@@ -1,17 +1,22 @@
 
 import { Repository } from "../interfaces/repository.interface";
-import { Warehouse } from "../interfaces/warehouse.interface";
+import { Warehouse, WarehouseFilters } from "../interfaces/warehouse.interface";
 import logger from "../utils/logger";
 
 export class WarehouseRepositoryPostgres implements Repository {
 
     constructor(private db: any) { }
 
-    async getWarehouses(): Promise<Warehouse[]> {
+    async getWarehouses(options?: WarehouseFilters): Promise<Warehouse[]> {
         // Implementation for getting all warehouses from PostgreSQL
         try {
-            const query = "SELECT id, name, latitude, longitude FROM warehouses";
-            const result = await this.db.query(query);
+            let query = "SELECT id, name, latitude, longitude FROM warehouses";
+            const params: any[] = [];
+            if (options && options.ids && options.ids.length > 0) {
+                query += " WHERE id = ANY($1)";
+                params.push(options.ids);
+            }
+            const result = await this.db.query(query, params);
             return result.rows;
         }
         catch (error) {

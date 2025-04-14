@@ -4,21 +4,9 @@ import { handleResponse } from "../middlewares/reponse.handler";
 
 const getWarehouses = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const warehouses = await warehouseService.getWarehouses();
+        const { ids } = req.body
+        const warehouses = await warehouseService.getWarehouses({ ids });
         handleResponse(res, 200, warehouses);
-    } catch (error) {
-        next(error);
-    }
-};
-
-const getPotentialWarehouses = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { ids, sourceLatitude, sourceLongitude } = req.body;
-        if (!ids || !sourceLatitude || !sourceLongitude) {
-            throw new Error("Missing required parameters");
-        }
-        const potentialWarehouses = await warehouseService.getPotentialWarehouses(ids, sourceLatitude, sourceLongitude);
-        handleResponse(res, 200, potentialWarehouses);
     } catch (error) {
         next(error);
     }
@@ -37,5 +25,4 @@ const addWarehouse = async (req: Request, res: Response, next: NextFunction) => 
 export default {
     getWarehouses,
     addWarehouse,
-    getPotentialWarehouses
 };

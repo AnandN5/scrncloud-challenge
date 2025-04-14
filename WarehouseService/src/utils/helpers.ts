@@ -1,4 +1,4 @@
-import { PotentialWarehouseResponse, Warehouse } from "../interfaces/warehouse.interface";
+import { Warehouse } from "../interfaces/warehouse.interface";
 
 /**
  * Calculate the Haversine distance between two geographical points.
@@ -11,7 +11,7 @@ export const calculateHaversineDistanceBatch = (
     warehouses: Warehouse[],
     sourceLat: number,
     sourceLon: number,
-): PotentialWarehouseResponse[] => {
+): any => {
     const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
     const R = 6371;
@@ -20,7 +20,7 @@ export const calculateHaversineDistanceBatch = (
     // cos(sourceLat) is constant hence precomputing it
     const cosSourceLat = Math.cos(sourceLatRad);
 
-    const nearbyWarehouses: PotentialWarehouseResponse[] = []
+    const nearbyWarehouses: any = []
     warehouses.map((warehouse) => {
         const destLatRad = toRadians(warehouse.latitude);
         const destLonRad = toRadians(warehouse.longitude);
@@ -37,5 +37,5 @@ export const calculateHaversineDistanceBatch = (
 
         nearbyWarehouses.push({ warehouse, distance });
     });
-    return nearbyWarehouses.sort((a, b) => a.distance - b.distance);
+    return nearbyWarehouses.sort((a: {distance: number}, b: {distance: number}) => a.distance - b.distance);
 };
