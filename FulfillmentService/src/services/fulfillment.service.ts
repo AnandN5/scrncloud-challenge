@@ -4,9 +4,6 @@ import { StockWithWarehouseDistance } from '../types/inventory.types';
 import logger from '../utils/logger';
 import { sortStockByWarehouseDistance } from '../utils/helpers'
 
-// This can be moved into a table in another service such a shipping service
-const PRICE_PER_KM_PER_KILOGRAM = 0.01; // Example price per km per kg
-
 const processFulfillmentDryRun = async (orderDetails: FulfillmentDryRunFilters): Promise<FulfillmentDryRunResponse> => {
     let fulfillmentDryRun = {
         fulfillment_status: "NOT_FULFILLABLE"
@@ -66,7 +63,7 @@ const getFulfillmentPlan = (stocks: StockWithWarehouseDistance[], quantity_reque
         fulfillmentPlan.push({
             warehouse_id: stock.warehouse.id,
             warehouse_name: stock.warehouse.name,
-            shipping_cost: stock.distance * PRICE_PER_KM_PER_KILOGRAM * availableQuantity,
+            distance: stock.distance,
             device_id: stock.device_id,
             quantity_requested,
             quantity_fulfilled: availableQuantity,
