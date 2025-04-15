@@ -43,12 +43,8 @@ const getStock = async (req: Request, res: Response, next: NextFunction) => {
             // Handle comma-separated UUIDs
             device_ids = deviceIdsParam.split(",");
 
-            // Validate UUIDs (basic validation for UUID format)
-            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-            device_ids = device_ids.filter((id) => uuidRegex.test(id));
-
             if (device_ids.length > 0) {
-                const stock = await inventoryService.getStock({device_ids} as GetStockFilters);
+                const stock = await inventoryService.getStock({device_ids, filter_stockless: req.query.filter_stockless} as GetStockFilters);
                 handleResponse(res, 200, stock);
             }
         } else {
