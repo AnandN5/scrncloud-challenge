@@ -52,7 +52,7 @@ export interface FulfillmentDryRunResponse {
 export interface FulfillmentPlan {
     warehouse_id: string;
     warehouse_name: string;
-    shipping_cost: number;
+    distance: number;
     device_id: string;
     quantity_requested: number;
     quantity_fulfilled: number;
