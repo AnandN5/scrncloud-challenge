@@ -1,7 +1,6 @@
 import dbConnection from "../config/postgresdb";
 import { WarehouseFilters, Warehouse } from "../interfaces/warehouse.interface";
 import getRepository from "../repositories/repository";
-import { calculateHaversineDistanceBatch } from "../utils/helpers";
 
 const addWarehouse = async (warehouse: Warehouse): Promise<Warehouse> => {
     const warehouseRepository = getRepository(dbConnection);

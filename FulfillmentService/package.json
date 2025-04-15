@@ -1,0 +1,41 @@
+{
+  "name": "scrncloud-challenge",
+  "version": "1.0.0",
+  "description": "Order management service for managing order feature for screencloud devices. The repository includes the logic for inventory, catalog and pricing microservices to make the solution into a single repository for simplicity rather than creating separate repositories which will bring up complexity when trying to run locally.",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "node dist/app.js",
+    "start-server": "npx ts-node src/app.ts",
+    "build": "tsc",
+    "test:unit": "jest tests/unit"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
+    "postgres": "^3.4.5",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.14.0",
+    "@types/pg": "^8.11.12",
+    "eslint": "^9.24.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.0",
+    "ts-jest": "^29.3.1",
+    "ts-node": "^10.9.2",
+    "tslint": "^6.1.3"
+  }
+}

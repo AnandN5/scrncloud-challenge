@@ -13,20 +13,15 @@ export class InventoryRepositoryPostgres implements Repository {
         const params: any[] = [];
         let optionsCount = 1;
 
-        const device_ids = options?.device_ids;
-
         for (const key in options) {
             logger.info("Adding inventory getOption Key: \n", key);
             query += params.length ? " AND" : " WHERE";
-            if (device_ids && device_ids.length > 0) {
+            if (key === "device_ids" && options && options.device_ids && options.device_ids.length > 0) {
                 query += " device_id = ANY($1)";
-                params.push(device_ids);
-            } else {
-                query += ` ${key} = $${optionsCount}`;
-                params.push(options[key as keyof InventoryFilters]);
-            }
-            if(key === "filter_stockless" && options[key as keyof InventoryFilters] === true) {
-                query += " AND stock > 0";
+                params.push(options.device_ids);
+            } 
+            if(key === "filter_stockless" && Boolean(options.filter_stockless) === true) {
+                query += " stock > 0";
             }
             optionsCount++;
         }
