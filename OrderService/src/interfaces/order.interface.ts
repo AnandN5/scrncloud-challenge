@@ -9,7 +9,6 @@ export interface Order extends BaseAttributes {
     status: string;
     total_price: number;
     items: OrderItem[];
-    fullfillmeny_id?: string;
     total_shipping_cost?: number;
     total_discount?: number;
 }
@@ -20,9 +19,10 @@ export interface OrderItem {
     quantity: number;
     unit_price: number;
     unit_weight: number
-    order_id: string;
+    order_id?: string;
     discount?: number;
-    shipping_cost?: number;
+    total_item_price?: number;
+    shipping_status?: string;
 }
 
 export interface OrderCreateRequest {
