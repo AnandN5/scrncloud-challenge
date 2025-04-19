@@ -174,7 +174,13 @@ const placeOrder = async (orderParams: OrderCreateRequest): Promise<Order> => {
             );
             // confirm resrvation here
         }
-        // triggerFulfillment here
+
+        // Trigger fulfillment for the placed order. This will be done asynchronously
+        const _ = fulfillmentService.triggerFulfillment(
+            reservations.reservations,
+            order.id,
+        );
+
         return order;
     } catch (error) {
         throw error;

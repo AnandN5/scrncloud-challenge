@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
     GetStockResponse,
+    InventoryReservationSummary,
     StockReserveRequest,
 } from '../interfaces/inventory.interface';
 import { ServiceDiscovery } from '../utils/constants';
@@ -33,7 +34,7 @@ export const getStock = async (filters: {
 
 export const reserveStock = async (
     params: StockReserveRequest[],
-): Promise<void> => {
+): Promise<InventoryReservationSummary> => {
     try {
         const response = await axios.post(
             `${ServiceDiscovery.INVENTORY_SERVICE}/reserve`,
@@ -44,6 +45,7 @@ export const reserveStock = async (
                 `Failed to reserve stock, Status code: ${response.status}`,
             );
         }
+        return response.data.data as InventoryReservationSummary;
     } catch (error) {
         logger.error('Error reserving stock:', error);
         throw new Error(
