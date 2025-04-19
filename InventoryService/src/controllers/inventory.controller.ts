@@ -1,9 +1,14 @@
-import { NextFunction, Request, Response } from "express";
-import inventoryService from "../services/inventory.service";
-import { handleResponse } from "../middlewares/reponse.handler";
-import { GetStockFilters } from "../interfaces/inventory.interface";
+import { NextFunction, Request, Response } from 'express';
+import inventoryService from '../services/inventory.service';
+import { handleResponse } from '../middlewares/reponse.handler';
+import { GetStockFilters } from '../interfaces/inventory.interface';
+import { StockReserveRequest } from '../interfaces/inventory.reservation.interface';
 
-const addInventory = async (req: Request, res: Response, next: NextFunction) => {
+const addInventory = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     try {
         const inventoryData = req.body;
         const newInventory = await inventoryService.addInventory(inventoryData);
@@ -13,7 +18,11 @@ const addInventory = async (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
-const getInventories = async (req: Request, res: Response, next: NextFunction) => {
+const getInventories = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     try {
         const filters = req.query; // Extract filters from query parameters
         const inventories = await inventoryService.getInventories(filters);
@@ -23,11 +32,18 @@ const getInventories = async (req: Request, res: Response, next: NextFunction) =
     }
 };
 
-const updateInventory = async (req: Request, res: Response, next: NextFunction) => {
+const updateInventory = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     try {
         const { id } = req.params; // Extract inventory ID from URL parameters
         const inventoryUpdate = req.body; // Extract fields to update from request body
-        const updatedInventory = await inventoryService.updateInventory(id, inventoryUpdate);
+        const updatedInventory = await inventoryService.updateInventory(
+            id,
+            inventoryUpdate,
+        );
         handleResponse(res, 200, updatedInventory);
     } catch (error) {
         next(error);
@@ -36,20 +52,40 @@ const updateInventory = async (req: Request, res: Response, next: NextFunction) 
 
 const getStock = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let device_ids: string[]
+        let device_ids: string[];
         if (req.query.device_ids) {
             const deviceIdsParam = req.query.device_ids as string;
 
             // Handle comma-separated UUIDs
-            device_ids = deviceIdsParam.split(",");
+            device_ids = deviceIdsParam.split(',');
 
             if (device_ids.length > 0) {
-                const stock = await inventoryService.getStock({device_ids, filter_stockless: req.query.filter_stockless} as GetStockFilters);
+                const stock = await inventoryService.getStock({
+                    device_ids,
+                    filter_stockless: req.query.filter_stockless,
+                } as GetStockFilters);
                 handleResponse(res, 200, stock);
             }
         } else {
-            return handleResponse(res, 400, { message: "device_ids query parameter is required" });
+            return handleResponse(res, 400, {
+                message: 'device_ids query parameter is required',
+            });
         }
+    } catch (error) {
+        next(error);
+    }
+};
+
+const reserveStock = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    try {
+        const stockReserveRequest = req.body as StockReserveRequest[]; // Extract fields from request body
+        const reservedStock =
+            await inventoryService.reserveStock(stockReserveRequest);
+        handleResponse(res, 200, reservedStock);
     } catch (error) {
         next(error);
     }
@@ -60,4 +96,5 @@ export default {
     getInventories,
     updateInventory,
     getStock,
+    reserveStock,
 };

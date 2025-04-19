@@ -26,7 +26,7 @@ export const validateOrderRequest = (orderRequest: OrderCreateRequest) => {
 }
 
 export const calculateItemTotals = (item: Device, orderRequest: OrderCreateRequest) => {
-    let itemWithTotals = {
+    const itemWithTotals = {
         ...item,
         quantity_requested: orderRequest.quantity,
         total_price: orderRequest.quantity * item.price,

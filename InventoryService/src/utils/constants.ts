@@ -1,0 +1,6 @@
+export const ReservationStatus = {
+    RESERVED: 'RESERVED',
+    UNRESERVED: 'UNRESERVED',
+    RESERVE_FAILED: 'RESERVE_FAILED',
+    RESERVE_CONFIRMED: 'RESERVE_CONFIRMED',
+} as const;
