@@ -1,4 +1,4 @@
-import { GetStockResponse } from "../interfaces/inventory.interface";
+import { GetStockResponse, StockWithWarehouseDistance } from "../interfaces/inventory.interface";
 
 /**
  * Calculate the distance between warehouses and order location using Haversine formula
@@ -9,10 +9,10 @@ import { GetStockResponse } from "../interfaces/inventory.interface";
  * @returns - Array of stocks with distance from the order location and sorted
  */
 export const sortStockByWarehouseDistance = (
-    stocks: GetStockResponse[],
+    stocks: StockWithWarehouseDistance[],
     orderLat: number,
     orderLon: number,
-): (GetStockResponse & { distance: number })[] => {
+): StockWithWarehouseDistance[] => {
     const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
     const R = 6371;
@@ -21,7 +21,7 @@ export const sortStockByWarehouseDistance = (
     
     const cosSourceLat = Math.cos(orderLatRad);
 
-    const nearbyWarehouses: (GetStockResponse & { distance: number })[] = []
+    const nearbyWarehouses: StockWithWarehouseDistance[] = []
     stocks.map((stoke) => {
         const sourceLatRad = toRadians(stoke.warehouse.latitude);
         const sourceLonRad = toRadians(stoke.warehouse.longitude);

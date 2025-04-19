@@ -6,7 +6,7 @@ import { ServiceDiscovery } from '../utils/constants';
 export const getFulfillmentDryRun = async (filters: FulfillmentFilters): Promise<FulfillmentDryRunResponse> => {
   try {
     const fulfillmentServiceUrl = `${ServiceDiscovery.FULFILLMENT_SERVICE}/dry-run`;
-    const response = await axios.post(fulfillmentServiceUrl, { params: filters });
+    const response = await axios.post(fulfillmentServiceUrl,  filters );
     return response.data.data;
   } catch (error) {
     logger.error('Error fetching fulfillment:', error);

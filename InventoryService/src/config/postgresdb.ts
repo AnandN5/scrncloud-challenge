@@ -10,6 +10,6 @@ const dbConnection = new Pool({
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
     max: 5
-})
+});
 
-export default dbConnection
+export default dbConnection;

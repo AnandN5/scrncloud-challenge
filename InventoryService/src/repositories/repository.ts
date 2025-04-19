@@ -1,15 +1,11 @@
-import { db_type } from "../config/config";
-import { Repository } from "../interfaces/repository.interface";
-import { InventoryRepositoryPostgres } from "./inventory.repository.postgres";
+import { Pool } from 'pg';
+import { Repository } from '../interfaces/repository.interface';
 
-let inventoryRepository: Repository
-
-const getRepository = (db: any): Repository => {
-    if (db_type === "postgres") {
-        inventoryRepository = new InventoryRepositoryPostgres(db);
-    }
-    // Add other database types here if needed
-    return inventoryRepository;
-}
+const getRepository = <T>(
+    db: Pool,
+    repository: new (db: Pool) => Repository<T>,
+): Repository<T> => {
+    return new repository(db);
+};
 
 export default getRepository;

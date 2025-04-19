@@ -1,5 +1,4 @@
 import inventoryService from '../../../src/services/inventory.service';
-import { InventoryRepositoryPostgres } from '../../../src/repositories/inventory.repository.postgres';
 import getRepository from '../../../src/repositories/repository';
 
 jest.mock('../../../src/repositories/repository');
@@ -15,13 +14,11 @@ jest.mock('../../../src/repositories/repository');
 // });
 
 describe('InventoryService', () => {
-
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     it('should add a new inventory', async () => {
-
         const mockInventory = {
             warehouse_id: 'warehouse-uuid',
             device_id: 'device-uuid',
@@ -41,14 +38,12 @@ describe('InventoryService', () => {
 
         (getRepository as jest.Mock).mockReturnValue(mockRepository);
 
-
         const result = await inventoryService.addInventory(mockInventory);
 
         expect(result).toEqual(mockResponse);
     });
 
     it('should fetch inventories with filters', async () => {
-
         const mockFilters = { warehouse_id: 'warehouse-uuid' };
         const mockResponse = [
             {
@@ -93,7 +88,10 @@ describe('InventoryService', () => {
 
         (getRepository as jest.Mock).mockReturnValue(mockRepository);
 
-        const result = await inventoryService.updateInventory(mockId, mockUpdate);
+        const result = await inventoryService.updateInventory(
+            mockId,
+            mockUpdate,
+        );
 
         expect(result).toEqual(mockResponse);
     });

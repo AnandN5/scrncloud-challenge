@@ -18,6 +18,21 @@ const getOrderReview = async (req: Request, res: Response, next: NextFunction) =
     }
 }
 
+const placeOrder = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const params = req.body as OrderCreateRequest;
+        validateOrderRequest(params);
+        if (params.dry_run) {
+            throw new Error("Order is a dry run");
+        }
+        const order = await orderService.placeOrder(params);
+        handleResponse(res, 200, order)
+    } catch (error) {
+        next(error);
+    }
+}
+
 export default {
-    getOrderReview
+    getOrderReview,
+    placeOrder
 }

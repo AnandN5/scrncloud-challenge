@@ -1,4 +1,4 @@
-import { Router, Request, Response  } from 'express';
+import { Router } from 'express';
 import inventoryController from '../controllers/inventory.controller';
 
 const router = Router();
@@ -14,5 +14,8 @@ router.get('/stock', inventoryController.getStock);
 
 // Route to update an inventory (PATCH)
 router.put('/:id', inventoryController.updateInventory);
+
+// Route to reserve stock
+router.post('/reserve', inventoryController.reserveStock);
 
 export default router;
